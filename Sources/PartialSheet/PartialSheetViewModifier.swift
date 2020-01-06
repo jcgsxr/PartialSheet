@@ -27,8 +27,13 @@ struct PartialSheet<SheetContent>: ViewModifier where SheetContent: View {
     
     /// The color of the cover
     var coverColor: Color
+   
+    /// The offset when the sheet is dismissed
+    var bottomOffset: CGFloat
     
     var view: () -> SheetContent
+
+    var onDragEnded: (_ isPresented: Bool) -> ()
     
     // MARK: - Private Properties
     
@@ -45,7 +50,7 @@ struct PartialSheet<SheetContent>: ViewModifier where SheetContent: View {
     
     /// The he point for the bottom anchor
     private var bottomAnchor: CGFloat {
-        return UIScreen.main.bounds.height + 5
+        return UIScreen.main.bounds.height + bottomOffset
     }
     
     /// The current anchor point, based if the **presented** property is true or false
@@ -185,11 +190,18 @@ struct PartialSheet<SheetContent>: ViewModifier where SheetContent: View {
         if verticalDirection > 1 {
             DispatchQueue.main.async {
                 self.presented = false
+                self.onDragEnded(self.presented)
             }
-        } else if verticalDirection < 0 {
+
+            return
+        } 
+        
+        if verticalDirection < 0 {
             self.presented = true
         } else {
             self.presented = (closestPosition == topAnchor)
         }
+
+        onDragEnded(self.presented)
     }
 }

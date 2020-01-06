@@ -26,7 +26,10 @@ extension View {
 		handlerBarColor: Color = Color.gray,
 		enableCover: Bool = true,
 		coverColor: Color = Color.black.opacity(0.4),
-		view: @escaping () -> SheetContent ) -> some View {
+		bottomOffset: CGFloat = 5,
+		view: @escaping () -> SheetContent,
+		onDragEnded: @escaping (Bool) -> ()
+	) -> some View {
 		self.modifier(
 			PartialSheet(
 				presented: presented,
@@ -34,7 +37,9 @@ extension View {
 				handlerBarColor: handlerBarColor,
 				enableCover: enableCover,
 				coverColor: coverColor,
-				view: view
+            	bottomOffset: bottomOffset,
+				view: view,
+				onDragEnded: onDragEnded
 			)
 		)
 	}
